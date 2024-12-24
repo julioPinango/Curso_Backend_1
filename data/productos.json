@@ -1,0 +1,16 @@
+[
+  {
+    "id": "1735005475639",
+    "title": "Producto Prueba",
+    "description": "Descripción del producto",
+    "code": "123ABC",
+    "price": 200,
+    "status": true,
+    "stock": 50,
+    "category": "Categoría Prueba",
+    "thumbnails": [
+      "imagen1.jpg",
+      "imagen2.jpg"
+    ]
+  }
+]
