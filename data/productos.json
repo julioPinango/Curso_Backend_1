@@ -1,20 +1,136 @@
 [
   {
-    "id": "1735005475639",
-    "title": "Producto Prueba",
-    "description": "Descripción del producto",
-    "code": "123ABC",
-    "price": 200,
+    "id": "1",
+    "title": "Laptop Gamer",
+    "description": "Laptop de alto rendimiento con procesador Intel i7 y tarjeta gráfica NVIDIA GTX 3060.",
+    "code": "LAP123",
+    "price": 1500,
     "status": true,
-    "stock": 50,
-    "category": "Categoría Prueba",
+    "stock": 10,
+    "category": "Electrónica",
     "thumbnails": [
-      "imagen1.jpg",
-      "imagen2.jpg"
+      "laptop.jpg"
     ]
   },
   {
-    "id": "1737423171255",
+    "id": "2",
+    "title": "Smartphone 5G",
+    "description": "Teléfono móvil con conectividad 5G y pantalla AMOLED de 6.5 pulgadas.",
+    "code": "SMT456",
+    "price": 800,
+    "status": true,
+    "stock": 25,
+    "category": "Electrónica",
+    "thumbnails": [
+      "smartphone.jpg"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Auriculares Bluetooth",
+    "description": "Auriculares inalámbricos con cancelación de ruido activa.",
+    "code": "AUD789",
+    "price": 120,
+    "status": true,
+    "stock": 50,
+    "category": "Accesorios",
+    "thumbnails": [
+      "auriculares.jpg"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Smartwatch Deportivo",
+    "description": "Reloj inteligente con GPS y resistencia al agua.",
+    "code": "SMW101",
+    "price": 200,
+    "status": true,
+    "stock": 30,
+    "category": "Wearables",
+    "thumbnails": [
+      "smartwatch.jpg"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Teclado Mecánico",
+    "description": "Teclado RGB con switches Cherry MX para gamers.",
+    "code": "TCL202",
+    "price": 85,
+    "status": true,
+    "stock": 40,
+    "category": "Accesorios",
+    "thumbnails": [
+      "teclado.jpg"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Monitor UltraWide",
+    "description": "Monitor 34 pulgadas con resolución QHD y panel IPS.",
+    "code": "MON303",
+    "price": 400,
+    "status": true,
+    "stock": 15,
+    "category": "Electrónica",
+    "thumbnails": [
+      "monitor.jpg"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Mouse Gamer",
+    "description": "Mouse con sensor óptico de alta precisión y botones programables.",
+    "code": "MSE404",
+    "price": 60,
+    "status": true,
+    "stock": 100,
+    "category": "Accesorios",
+    "thumbnails": [
+      "mouse.jpg"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Cámara Fotográfica",
+    "description": "Cámara DSLR con lente intercambiable de 24MP.",
+    "code": "CAM505",
+    "price": 1000,
+    "status": true,
+    "stock": 5,
+    "category": "Fotografía",
+    "thumbnails": [
+      "camara.jpg"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Parlante Portátil",
+    "description": "Parlante Bluetooth con sonido estéreo y resistencia al agua.",
+    "code": "PAR606",
+    "price": 90,
+    "status": true,
+    "stock": 60,
+    "category": "Audio",
+    "thumbnails": [
+      "parlante.jpg"
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Tablet 10 pulgadas",
+    "description": "Tablet con pantalla HD y 128GB de almacenamiento.",
+    "code": "TAB707",
+    "price": 250,
+    "status": true,
+    "stock": 20,
+    "category": "Electrónica",
+    "thumbnails": [
+      "tablet.jpg"
+    ]
+  },
+  {
+    "id": "1737425168933",
     "title": "Producto Prueba 2",
     "description": "Descripción del producto",
     "code": "P002",
