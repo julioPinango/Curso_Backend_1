@@ -12,5 +12,18 @@
       "imagen1.jpg",
       "imagen2.jpg"
     ]
+  },
+  {
+    "id": "1737423171255",
+    "title": "Producto Prueba 2",
+    "description": "Descripción del producto",
+    "code": "P002",
+    "price": 150,
+    "status": true,
+    "stock": 20,
+    "category": "Electronica",
+    "thumbnails": [
+      "http://example.com/image.jpg"
+    ]
   }
 ]

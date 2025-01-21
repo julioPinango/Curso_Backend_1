@@ -33,22 +33,32 @@ const getCartProducts = (req, res) => {
 };
 
 const addProductToCart = (req, res) => {
-    console.log(`Intentando agregar producto ${req.params.pid} al carrito ${req.params.cid}`); 
+    const { cid, pid } = req.params;
+
+    console.log(`Intentando agregar producto ${pid} al carrito ${cid}`);
+
     const carts = readCarts();
     const cart = carts.find((c) => c.id === cid);
+    if (!cart) {
+        console.error("Carrito no encontrado");
+        return res.status(404).json({ error: "Carrito no encontrado" });
+    }
     console.log("Estado inicial del carrito:", cart);
+    const productInCart = cart.products.find((p) => p.product === pid);
 
     if (productInCart) {
         productInCart.quantity += 1;
-        console.log("Cantidad actualizada del producto en el carrito:", productInCart); 
-    } else {
+        console.log(`Producto ${pid} ya estaba en el carrito. Nueva cantidad: ${productInCart.quantity}`);
+    } 
+    else {
         cart.products.push({ product: pid, quantity: 1 });
-        console.log("Producto agregado al carrito:", cart.products); 
+        console.log(`Producto ${pid} agregado al carrito por primera vez`);
     }
     writeCarts(carts);
-    console.log("Contenido actualizado de carrito.json:", carts); 
+    console.log("Estado final del carrito:", cart);
     res.status(200).json(cart);
 };
+
 
 
 module.exports = { createCart, getCartProducts, addProductToCart };
