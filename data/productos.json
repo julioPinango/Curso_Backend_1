@@ -141,5 +141,29 @@
     "thumbnails": [
       "http://example.com/image.jpg"
     ]
+  },
+  {
+    "id": "1739170757245",
+    "title": "Smartwatch Deportivo",
+    "description": "Reloj inteligente con GPS y resistencia al agua.",
+    "code": "PAR606",
+    "price": 552,
+    "status": true,
+    "stock": 64,
+    "category": "Electrónica",
+    "thumbnails": []
+  },
+  {
+    "id": "1739170850695",
+    "title": "Tablet 10 pulgadas",
+    "description": "Parlante Bluetooth con sonido estéreo y resistencia al agua.",
+    "code": "LAP123",
+    "price": 813,
+    "status": true,
+    "stock": 37,
+    "category": "Electrónica",
+    "thumbnails": [
+      "producto22.jpg"
+    ]
   }
 ]

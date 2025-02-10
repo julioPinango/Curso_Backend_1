@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const Product = require('../models/Product');
 const productsFilePath = path.join(__dirname, '../data/productos.json');
 
 const readProducts = () => {
@@ -11,13 +12,33 @@ const writeProducts = (products) => {
     fs.writeFileSync(productsFilePath, JSON.stringify(products, null, 2));
 };
 
-const getProducts = (req, res) => {
-    const { limit } = req.query;
-    const products = readProducts();
-    if (limit) {
-        return res.json(products.slice(0, parseInt(limit)));
+const getProducts = async (req, res) => {
+    const { limit = 10, page = 1, sort, query } = req.query;
+    const options = {
+        limit: parseInt(limit),
+        page: parseInt(page),
+        sort: sort ? { price: sort === 'asc' ? 1 : -1 } : undefined,
+    };
+
+    const filter = query ? { category: query } : {};
+
+    try {
+        const products = await Product.paginate(filter, options);
+        res.json({
+            status: 'success',
+            payload: products.docs,
+            totalPages: products.totalPages,
+            prevPage: products.prevPage,
+            nextPage: products.nextPage,
+            page: products.page,
+            hasPrevPage: products.hasPrevPage,
+            hasNextPage: products.hasNextPage,
+            prevLink: products.hasPrevPage ? `/api/products?limit=${limit}&page=${products.prevPage}&sort=${sort}&query=${query}` : null,
+            nextLink: products.hasNextPage ? `/api/products?limit=${limit}&page=${products.nextPage}&sort=${sort}&query=${query}` : null,
+        });
+    } catch (error) {
+        res.status(500).json({ status: 'error', message: error.message });
     }
-    res.json(products);
 };
 
 const getProductById = (req, res) => {

@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+const Cart = require('../models/Cart');
+const Product = require('../models/Product');
 const cartsFilePath = path.join(__dirname, '../data/carrito.json');
 const productsFilePath = path.join(__dirname, '../data/productos.json');
 
@@ -59,6 +61,65 @@ const addProductToCart = (req, res) => {
     res.status(200).json(cart);
 };
 
+const deleteProductFromCart = async (req, res) => {
+    const { cid, pid } = req.params;
+
+    try {
+        const cart = await Cart.findById(cid);
+        if (!cart) return res.status(404).json({ error: 'Carrito no encontrado' });
+
+        cart.products = cart.products.filter(p => p.product.toString() !== pid);
+        await cart.save();
+
+        res.status(200).json(cart);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+const updateCart = async (req, res) => {
+    const { cid } = req.params;
+    const { products } = req.body;
+
+    try {
+        const cart = await Cart.findById(cid);
+        if (!cart) return res.status(404).json({ error: 'Carrito no encontrado' });
+
+        cart.products = products;
+        await cart.save();
+
+        res.status(200).json(cart);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+const updateProductQuantity = async (req, res) => {
+    const { cid, pid } = req.params;
+    const { quantity } = req.body;
+
+    try {
+        const cart = await Cart.findById(cid);
+        if (!cart) return res.status(404).json({ error: 'Carrito no encontrado' });
+
+        const productInCart = cart.products.find(p => p.product.toString() === pid);
+        if (!productInCart) return res.status(404).json({ error: 'Producto no encontrado en el carrito' });
+
+        productInCart.quantity = quantity;
+        await cart.save();
+
+        res.status(200).json(cart);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
 
 
-module.exports = { createCart, getCartProducts, addProductToCart };
+module.exports = { 
+    createCart, 
+    getCartProducts, 
+    addProductToCart,
+    deleteProductFromCart,
+    updateCart,
+    updateProductQuantity, 
+};

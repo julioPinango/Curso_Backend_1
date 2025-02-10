@@ -36,6 +36,9 @@ io.on('connection', (socket) => {
     socket.emit('updateProducts', readProducts());
 });
 
+const connectDB = require('./config/db');
+connectDB();
+
 httpServer.listen(PORT, () => {
     console.log(`Servidor escuchando en http://localhost:${PORT}`);
 });
