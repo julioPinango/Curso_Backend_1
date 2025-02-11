@@ -1,44 +1,33 @@
-const express = require('express');
-const { create } = require('express-handlebars');
-const { Server: SocketIOServer } = require('socket.io');
-const http = require('http');
-const productsRouter = require('./routers/productsRouter');
-const cartsRouter = require('./routers/cartsRouter');
-const viewsRouter = require('./routers/viewsRouter');
-const { readProducts } = require('./controllers/productsController');
+import express from 'express';
+import mongoose from 'mongoose';
+import handlebars from 'express-handlebars';
+import { __dirname } from './utils.js';
+import path from 'path';
+
+import productsRouter from './routers/productsRouter.js';
+import cartsRouter from './routers/cartsRouter.js';
+import viewsRouter from './routers/viewsRouter.js';
 
 const app = express();
-const PORT = 8080;
-const httpServer = http.createServer(app);
-const io = new SocketIOServer(httpServer);
-const hbs = create({
-    extname: '.handlebars',
-});
 
-app.engine('.handlebars', hbs.engine);
+// Configuración de Handlebars
+app.engine('handlebars', handlebars.engine());
+app.set('view engine', 'handlebars');
+app.set('views', path.join(__dirname, 'views'));
 
-app.set('view engine', '.handlebars');
-app.set('views', './views');
-
+// Middlewares
 app.use(express.json());
-app.use(express.static('public'));
-app.use((req, res, next) => {
-    req.io = io;
-    next();
-});
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 
+// Rutas
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
-app.use('/', viewsRouter);
+app.use('/', viewsRouter); // <-- Agregamos la ruta de vistas
 
-io.on('connection', (socket) => {
-    console.log('Cliente conectado');
-    socket.emit('updateProducts', readProducts());
-});
+// Conexión a MongoDB
+mongoose.connect('mongodb://127.0.0.1:27017/ecommerce')
+    .then(() => console.log('Conectado a MongoDB'))
+    .catch(error => console.error('Error de conexión:', error));
 
-const connectDB = require('./config/db');
-connectDB();
-
-httpServer.listen(PORT, () => {
-    console.log(`Servidor escuchando en http://localhost:${PORT}`);
-});
+app.listen(8080, () => console.log('Servidor escuchando en el puerto 8080'));

@@ -1,16 +1,14 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const connectDB = async () => {
-    try {
-        await mongoose.connect('mongodb://localhost:27017/ecommerce', {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
-        console.log('MongoDB conectado');
-    } catch (error) {
-        console.error('Error al conectar a MongoDB:', error);
-        process.exit(1);
-    }
-};
+const MONGO_URI = 'mongodb://localhost:27017/ecommerce';
 
-module.exports = connectDB;
+mongoose.connect(MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log('Conectado a MongoDB');
+}).catch(err => {
+    console.error('Error de conexión a MongoDB:', err);
+});
+
+export default mongoose;

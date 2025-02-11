@@ -1,10 +1,9 @@
-const express = require('express');
-const { deleteProductFromCart, updateCart, updateProductQuantity } = require('../controllers/cartsController');
+import express from 'express';
+import { createCart, addProductToCart } from '../../Curso_Backend_1/controllers/cartsController.js';
 
 const router = express.Router();
 
-router.delete('/:cid/products/:pid', deleteProductFromCart);
-router.put('/:cid', updateCart);
-router.put('/:cid/products/:pid', updateProductQuantity);
+router.post('/', createCart);
+router.post('/:cartId/products/:productId', addProductToCart);
 
-module.exports = router;
+export default router;
