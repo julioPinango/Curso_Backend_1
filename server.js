@@ -23,7 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Rutas
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
-app.use('/', viewsRouter); // <-- Agregamos la ruta de vistas
+app.use('/', viewsRouter); 
 
 // Conexión a MongoDB
 mongoose.connect('mongodb://127.0.0.1:27017/ecommerce')
