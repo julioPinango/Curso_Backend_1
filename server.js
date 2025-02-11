@@ -30,4 +30,4 @@ mongoose.connect('mongodb://127.0.0.1:27017/ecommerce')
     .then(() => console.log('Conectado a MongoDB'))
     .catch(error => console.error('Error de conexión:', error));
 
-app.listen(8080, () => console.log('Servidor escuchando en el puerto 8080'));
+app.listen(8080, () => console.log('Servidor escuchando en el puerto http://localhost:8080/products'));

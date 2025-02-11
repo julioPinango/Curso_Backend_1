@@ -1,10 +1,9 @@
 import Product from '../models/Product.js';
 
-// Obtener todos los productos con filtros y paginación
 export const getProducts = async (req, res) => {
     try {
         const { page = 1, limit = 10, category, sort } = req.query;
-        const query = category ? { category } : {};
+        const query = category ? { category } : {}; // Filtrar por categoría si se pasa en la query
 
         const options = {
             page: parseInt(page, 10),
@@ -13,7 +12,19 @@ export const getProducts = async (req, res) => {
         };
 
         const products = await Product.paginate(query, options);
-        res.json(products);
+
+        res.json({
+            status: "success",
+            payload: products.docs,
+            totalPages: products.totalPages,
+            prevPage: products.hasPrevPage ? products.prevPage : null,
+            nextPage: products.hasNextPage ? products.nextPage : null,
+            page: products.page,
+            hasPrevPage: products.hasPrevPage,
+            hasNextPage: products.hasNextPage,
+            prevLink: products.hasPrevPage ? `/api/products?page=${products.prevPage}` : null,
+            nextLink: products.hasNextPage ? `/api/products?page=${products.nextPage}` : null
+        });
     } catch (error) {
         res.status(500).json({ error: 'Error al obtener productos' });
     }

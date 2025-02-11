@@ -1,27 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrito</title>
-</head>
-<body>
-    <h1>Carrito</h1>
+<h2>Tu Carrito</h2>
+
+{{#if products.length}}
     <ul>
         {{#each products}}
             <li>
-                {{this.product.title}} - Cantidad: {{this.quantity}}
-                <button onclick="removeFromCart('{{this.product._id}}')">Eliminar</button>
+                <strong>{{this.product.title}}</strong> - Cantidad: {{this.quantity}}
+                <button onclick="removeFromCart('{{../cartId}}', '{{this.product._id}}')">Eliminar</button>
             </li>
         {{/each}}
     </ul>
-    <script>
-        function removeFromCart(productId) {
-            fetch(`/api/carts/:cid/products/${productId}`, { method: 'DELETE' })
-                .then(response => response.json())
-                .then(data => console.log(data))
-                .catch(error => console.error(error));
-        }
-    </script>
-</body>
-</html>
+    <button onclick="clearCart('{{cartId}}')">Vaciar Carrito</button>
+{{else}}
+    <p>El carrito está vacío</p>
+{{/if}}
+
+<script>
+    function removeFromCart(cartId, productId) {
+        fetch(`/api/carts/${cartId}/product/${productId}`, {
+            method: "DELETE"
+        })
+        .then(response => response.json())
+        .then(data => location.reload())
+        .catch(error => console.error("Error:", error));
+    }
+
+    function clearCart(cartId) {
+        fetch(`/api/carts/${cartId}`, {
+            method: "DELETE"
+        })
+        .then(response => response.json())
+        .then(data => location.reload())
+        .catch(error => console.error("Error:", error));
+    }
+</script>
+
