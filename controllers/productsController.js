@@ -12,18 +12,22 @@ export const getProducts = async (req, res) => {
         };
 
         const products = await Product.paginate(query, options);
+        // Obtener categorías únicas para los filtros
+        const categories = await Product.distinct("category");
 
-        res.json({
-            status: "success",
-            payload: products.docs,
+        res.render("products", {
+            products: products.docs, // Aquí pasamos solo la lista de productos
             totalPages: products.totalPages,
             prevPage: products.hasPrevPage ? products.prevPage : null,
             nextPage: products.hasNextPage ? products.nextPage : null,
             page: products.page,
             hasPrevPage: products.hasPrevPage,
             hasNextPage: products.hasNextPage,
-            prevLink: products.hasPrevPage ? `/api/products?page=${products.prevPage}` : null,
-            nextLink: products.hasNextPage ? `/api/products?page=${products.nextPage}` : null
+            prevLink: products.hasPrevPage ? `/products?page=${products.prevPage}` : null,
+            nextLink: products.hasNextPage ? `/products?page=${products.nextPage}` : null,
+            selectedCategory: category || "",
+            selectedSort: sort || "",
+            categories: await Product.distinct("category") // Lista de categorías para el filtro
         });
     } catch (error) {
         res.status(500).json({ error: 'Error al obtener productos' });

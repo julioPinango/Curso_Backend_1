@@ -7,7 +7,7 @@ router.post('/', createCart);
 router.get('/:id', getCartById);
 router.post('/:cid/product/:pid', addProductToCart);
 router.delete('/:cid/products/:pid', removeProductFromCart);
-router.delete('/:cartId', clearCart);
+router.delete('/:cid', clearCart);
 router.put('/:cid', updateCart);
 router.put('/:cid/products/:pid', updateProductQuantity);
 

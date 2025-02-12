@@ -16,7 +16,7 @@
 
 <script>
     function removeFromCart(cartId, productId) {
-        fetch(`/api/carts/${cartId}/product/${productId}`, {
+        fetch(`/api/carts/${cartId}/products/${productId}`, {
             method: "DELETE"
         })
         .then(response => response.json())
@@ -33,4 +33,3 @@
         .catch(error => console.error("Error:", error));
     }
 </script>
-

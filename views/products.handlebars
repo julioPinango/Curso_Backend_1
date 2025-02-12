@@ -1,18 +1,88 @@
-{{#if products.length}}
-    <h2>Lista de productos</h2>
-    {{#each products}}
-        <div>
-            <h3>{{this.title}}</h3>
-            <p>Precio: {{this.price}}</p>
-            <button>Agregar al carrito</button>
-        </div>
-    {{/each}}
-{{else}}
-    <p>No hay productos disponibles.</p>
-{{/if}}
+<h2>Lista de productos</h2>
 
+<!-- Filtros y ordenamiento -->
+<form id="filterForm">
+    <label for="category">Categoría:</label>
+    <select id="category" name="category">
+        <option value="">Todas las categorías</option>
+        {{#each categories}}
+            <option value="{{this}}" {{#if (eq this ../selectedCategory)}}selected{{/if}}>{{this}}</option>
+        {{/each}}
+    </select>
+
+    <label for="sort">Ordenar por precio:</label>
+    <select id="sort" name="sort">
+        <option value="">Sin orden</option>
+        <option value="asc" {{#if (eq selectedSort "asc")}}selected{{/if}}>Menor a mayor</option>
+        <option value="desc" {{#if (eq selectedSort "desc")}}selected{{/if}}>Mayor a menor</option>
+    </select>
+
+    <button type="submit">Aplicar</button>
+</form>
+
+<div id="productsContainer">
+    {{#if products.length}}
+        {{#each products}}
+            <div>
+    <h3><a href="/products/{{this._id}}">{{this.title}}</a></h3>
+    <p>Precio: ${{this.price}}</p>
+    <button onclick="addToCart('{{this._id}}')">Agregar al carrito</button>
+</div>
+        {{/each}}
+
+        <!-- Paginación -->
+        <div>
+            {{#if hasPrevPage}}
+                <a href="{{prevLink}}">⬅ Anterior</a>
+            {{/if}}
+            Página {{page}} de {{totalPages}}
+            {{#if hasNextPage}}
+                <a href="{{nextLink}}">Siguiente ➡</a>
+            {{/if}}
+        </div>
+    {{else}}
+        <p>No hay productos disponibles.</p>
+        <p>Prueba con otra categoría o cambia los filtros.</p>
+    {{/if}}
+</div>
+
+<!-- Depuración manual de los productos -->
+<div style="display: none;">
+    {{#each products}}
+        <p>Producto: {{this.title}}, Precio: {{this.price}}, ID: {{this._id}}</p>
+    {{/each}}
+</div>
 
 <script>
+    // Establecer la categoría seleccionada
+    const categorySelect = document.getElementById("category");
+    const selectedCategory = "{{selectedCategory}}";
+    if (categorySelect && selectedCategory) {
+        categorySelect.value = selectedCategory;
+    }
+
+    // Establecer el orden seleccionado
+    const sortSelect = document.getElementById("sort");
+    const selectedSort = "{{selectedSort}}";
+    if (sortSelect && selectedSort) {
+        sortSelect.value = selectedSort;
+    }
+
+    // Manejar el envío del formulario
+    document.getElementById("filterForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const category = document.getElementById("category").value;
+        const sort = document.getElementById("sort").value;
+
+        let queryParams = new URLSearchParams();
+        if (category) queryParams.append("category", category);
+        if (sort) queryParams.append("sort", sort);
+
+        window.location.href = "/products?" + queryParams.toString();
+    });
+
+    // Agregar al carrito
     function addToCart(productId) {
         const cartId = localStorage.getItem("cartId");
         if (!cartId) {
