@@ -1,4 +1,5 @@
 import Product from '../models/Product.js';
+import Cart from '../models/Cart.js';
 
 export const getProducts = async (req, res) => {
     try {
@@ -15,7 +16,8 @@ export const getProducts = async (req, res) => {
         };
 
         const products = await Product.paginate(query, options);
-        const categories = await Product.distinct("category");
+        const categories = await Product.distinct("category"); // Obtiene todas las categorías únicas
+        const carts = await Cart.find().lean();
 
         res.render("products", {
             products: products.docs,
@@ -25,16 +27,18 @@ export const getProducts = async (req, res) => {
             page: products.page,
             hasPrevPage: products.hasPrevPage,
             hasNextPage: products.hasNextPage,
-            prevLink: products.hasPrevPage ? `/products?page=${products.prevPage}&limit=${limit}` : null,
-            nextLink: products.hasNextPage ? `/products?page=${products.nextPage}&limit=${limit}` : null,
+            prevLink: products.hasPrevPage ? `/products?page=${products.prevPage}&limit=${limit}&category=${category || ""}&sort=${sort || ""}` : null,
+            nextLink: products.hasNextPage ? `/products?page=${products.nextPage}&limit=${limit}&category=${category || ""}&sort=${sort || ""}` : null,
             selectedCategory: category || "",
             selectedSort: sort || "",
-            categories
+            categories, // Ahora enviamos la lista de categorías a la vista
+            carts
         });
     } catch (error) {
         res.status(500).json({ error: 'Error al obtener productos' });
     }
 };
+
 
 export const createProduct = async (req, res) => {
     try {

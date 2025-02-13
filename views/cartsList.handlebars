@@ -1,8 +1,62 @@
+<h1>Administración de Carritos</h1>
+
+<h3>Crear un Nuevo Carrito</h3>
+<button id="createCartBtn">Crear Carrito</button>
+
 <h2>Lista de Carritos</h2>
-<ul>
-    {{#each carts}}
-        <li>
-            <a href="/carts/{{this._id}}">Carrito {{this._id}}</a>
-        </li>
-    {{/each}}
-</ul>
+<table>
+    <thead>
+        <tr>
+            <th>ID del Carrito</th>
+            <th>Cant de Productos</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each carts}}
+        <tr>
+            <td>{{this._id}}</td>
+            <td style="text-align: center;">{{this.products.length}}</td>
+            <td>
+                <button class="viewCartBtn" data-cart-id="{{this._id}}">Ver Carrito</button>
+                <button class="clearCartBtn" data-cart-id="{{this._id}}">Vaciar Carrito</button>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<script>
+    document.getElementById("createCartBtn").addEventListener("click", async () => {
+        const response = await fetch("/api/carts", { method: "POST" });
+        const newCart = await response.json();
+        alert("Carrito creado con ID: " + newCart._id);
+        location.reload();
+    });
+
+    document.querySelectorAll(".viewCartBtn").forEach(button => {
+        button.addEventListener("click", (event) => {
+            const cartId = event.target.getAttribute("data-cart-id");
+            window.location.href = `/carts/${cartId}`;
+        });
+    });
+
+    document.querySelectorAll(".clearCartBtn").forEach(button => {
+        button.addEventListener("click", async (event) => {
+            const cartId = event.target.getAttribute("data-cart-id");
+
+            try {
+                const response = await fetch(`/api/carts/${cartId}`, { method: "DELETE" });
+
+                if (response.ok) {
+                    alert("Carrito vaciado.");
+                    location.reload();
+                } else {
+                    alert("Error al vaciar el carrito.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        });
+    });
+</script>

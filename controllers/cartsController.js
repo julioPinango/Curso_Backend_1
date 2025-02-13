@@ -1,6 +1,16 @@
 import Cart from '../models/Cart.js';
 import Product from '../models/Product.js';
 
+// Obtener todos los carritos
+export const getAllCarts = async (req, res) => {
+    try {
+        const carts = await Cart.find();
+        res.json(carts);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener carritos' });
+    }
+};
+
 export const createCart = async (req, res) => {
     try {
         const newCart = await Cart.create({ products: [] });
@@ -29,6 +39,20 @@ export const getCartById = async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({ error: 'Error al obtener el carrito' });
+    }
+};
+
+// Eliminar un carrito
+export const deleteCart = async (req, res) => {
+    try {
+        const { cid } = req.params;
+        const deletedCart = await Cart.findByIdAndDelete(cid);
+
+        if (!deletedCart) return res.status(404).json({ error: 'Carrito no encontrado' });
+
+        res.json({ message: 'Carrito eliminado correctamente' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al eliminar carrito' });
     }
 };
 

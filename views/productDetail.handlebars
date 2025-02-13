@@ -3,23 +3,52 @@
 <p>Precio: ${{product.price}}</p>
 <p>Stock disponible: {{product.stock}}</p>
 <p>Categoría: {{product.category}}</p>
-<button onclick="addToCart('{{product._id}}')">Agregar al carrito</button>
+
+<h2>Seleccionar Carrito</h2>
+<select id="cartSelect">
+    {{#each carts}}
+        <option value="{{this._id}}">Carrito {{this._id}}</option>
+    {{/each}}
+</select>
+<button id="selectCartBtn">Seleccionar Carrito</button>
+<p id="cartSelectedMessage"></p>
+
+<button id="addToCartBtn">Agregar al carrito</button>
 
 <script>
-    function addToCart(productId) {
-        const cartId = localStorage.getItem("cartId");
-        if (!cartId) {
-            alert("Crea un carrito primero");
+    let selectedCartId = null;
+
+    document.getElementById("selectCartBtn").addEventListener("click", () => {
+        selectedCartId = document.getElementById("cartSelect").value;
+        if (!selectedCartId) {
+            alert("Por favor, selecciona un carrito.");
+            return;
+        }
+        document.getElementById("cartSelectedMessage").innerText = "Carrito Seleccionado: " + selectedCartId;
+    });
+
+    document.getElementById("addToCartBtn").addEventListener("click", async () => {
+        if (!selectedCartId) {
+            alert("Selecciona un carrito primero.");
             return;
         }
 
-        fetch(`/api/carts/${cartId}/product/${productId}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ quantity: 1 })
-        })
-        .then(response => response.json())
-        .then(data => alert("Producto agregado al carrito"))
-        .catch(error => console.error("Error:", error));
-    }
+        const productId = "{{product._id}}";
+
+        try {
+            const response = await fetch(`/api/carts/${selectedCartId}/products/${productId}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ quantity: 1 })
+            });
+
+            if (response.ok) {
+                alert("Producto agregado al carrito.");
+            } else {
+                alert("Error al agregar el producto.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    });
 </script>

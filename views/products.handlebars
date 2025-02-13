@@ -1,6 +1,14 @@
+<h2>Seleccionar Carrito</h2>
+<select id="cartSelect">
+    {{#each carts}}
+        <option value="{{this._id}}">Carrito {{this._id}}</option>
+    {{/each}}
+</select>
+<button id="selectCartBtn">Seleccionar Carrito</button>
+<p id="cartSelectedMessage"></p>
+
 <h2>Lista de productos</h2>
 
-<!-- Filtros y ordenamiento -->
 <form id="filterForm">
     <label for="category">Categoría:</label>
     <select id="category" name="category">
@@ -24,13 +32,12 @@
     {{#if products.length}}
         {{#each products}}
             <div>
-    <h3><a href="/products/{{this._id}}">{{this.title}}</a></h3>
-    <p>Precio: ${{this.price}}</p>
-    <button onclick="addToCart('{{this._id}}')">Agregar al carrito</button>
-</div>
+                <h3><a href="/products/{{this._id}}">{{this.title}}</a></h3>
+                <p>Precio: ${{this.price}}</p>
+                <button class="addToCartBtn" data-product-id="{{this._id}}">Agregar al carrito</button>
+            </div>
         {{/each}}
 
-        <!-- Paginación -->
         <div>
             {{#if hasPrevPage}}
                 <a href="{{prevLink}}">⬅ Anterior</a>
@@ -46,57 +53,33 @@
     {{/if}}
 </div>
 
-<!-- Depuración manual de los productos -->
-<div style="display: none;">
-    {{#each products}}
-        <p>Producto: {{this.title}}, Precio: {{this.price}}, ID: {{this._id}}</p>
-    {{/each}}
-</div>
-
 <script>
-    // Establecer la categoría seleccionada
-    const categorySelect = document.getElementById("category");
-    const selectedCategory = "{{selectedCategory}}";
-    if (categorySelect && selectedCategory) {
-        categorySelect.value = selectedCategory;
-    }
+    let selectedCartId = null;
 
-    // Establecer el orden seleccionado
-    const sortSelect = document.getElementById("sort");
-    const selectedSort = "{{selectedSort}}";
-    if (sortSelect && selectedSort) {
-        sortSelect.value = selectedSort;
-    }
-
-    // Manejar el envío del formulario
-    document.getElementById("filterForm").addEventListener("submit", function(event) {
-        event.preventDefault();
-
-        const category = document.getElementById("category").value;
-        const sort = document.getElementById("sort").value;
-
-        let queryParams = new URLSearchParams();
-        if (category) queryParams.append("category", category);
-        if (sort) queryParams.append("sort", sort);
-
-        window.location.href = "/products?" + queryParams.toString();
-    });
-
-    // Agregar al carrito
-    function addToCart(productId) {
-        const cartId = localStorage.getItem("cartId");
-        if (!cartId) {
-            alert("Crea un carrito primero");
+    document.getElementById("selectCartBtn").addEventListener("click", () => {
+        selectedCartId = document.getElementById("cartSelect").value;
+        if (!selectedCartId) {
+            alert("Por favor, selecciona un carrito.");
             return;
         }
+        document.getElementById("cartSelectedMessage").innerText = "Carrito Seleccionado: " + selectedCartId;
+    });
 
-        fetch(`/api/carts/${cartId}/product/${productId}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ quantity: 1 })
-        })
-        .then(response => response.json())
-        .then(data => alert("Producto agregado al carrito"))
-        .catch(error => console.error("Error:", error));
-    }
+    document.querySelectorAll(".addToCartBtn").forEach(button => {
+        button.addEventListener("click", async (event) => {
+            if (!selectedCartId) {
+                alert("Selecciona un carrito primero.");
+                return;
+            }
+
+            const productId = event.target.getAttribute("data-product-id");
+            await fetch(`/api/carts/${selectedCartId}/products/${productId}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ quantity: 1 })
+            });
+
+            alert("Producto agregado al carrito.");
+        });
+    });
 </script>

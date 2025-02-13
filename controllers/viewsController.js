@@ -4,11 +4,17 @@ import Cart from '../models/Cart.js';
 export const renderProducts = async (req, res) => {
     try {
         const products = await Product.find().lean();
-        res.render('products', { title: 'Productos', products });
+        const carts = await Cart.find().lean();
+
+        console.log("Carritos obtenidos:", carts); // <-- Ver si realmente hay carritos
+
+        res.render('products', { title: 'Productos', products, carts });
     } catch (error) {
+        console.error("Error en renderProducts:", error);
         res.status(500).send("Error al cargar productos");
     }
 };
+
 
 export const renderCart = async (req, res) => {
     try {
