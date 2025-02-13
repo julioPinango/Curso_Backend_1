@@ -16,25 +16,9 @@ export const getProducts = async (req, res) => {
         };
 
         const products = await Product.paginate(query, options);
-        const categories = await Product.distinct("category"); // Obtiene todas las categorías únicas
-        const carts = await Cart.find().lean();
-
-        res.render("products", {
-            products: products.docs,
-            totalPages: products.totalPages,
-            prevPage: products.hasPrevPage ? products.prevPage : null,
-            nextPage: products.hasNextPage ? products.nextPage : null,
-            page: products.page,
-            hasPrevPage: products.hasPrevPage,
-            hasNextPage: products.hasNextPage,
-            prevLink: products.hasPrevPage ? `/products?page=${products.prevPage}&limit=${limit}&category=${category || ""}&sort=${sort || ""}` : null,
-            nextLink: products.hasNextPage ? `/products?page=${products.nextPage}&limit=${limit}&category=${category || ""}&sort=${sort || ""}` : null,
-            selectedCategory: category || "",
-            selectedSort: sort || "",
-            categories, // Ahora enviamos la lista de categorías a la vista
-            carts
-        });
+        res.json(products);
     } catch (error) {
+        console.error("Error en getProducts:", error);
         res.status(500).json({ error: 'Error al obtener productos' });
     }
 };
