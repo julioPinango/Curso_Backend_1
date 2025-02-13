@@ -16,10 +16,24 @@ export const getProducts = async (req, res) => {
         };
 
         const products = await Product.paginate(query, options);
-        res.json(products);
+
+        const response = {
+            status: 'success',
+            payload: products.docs,
+            totalPages: products.totalPages,
+            prevPage: products.prevPage,
+            nextPage: products.nextPage,
+            page: products.page,
+            hasPrevPage: products.hasPrevPage,
+            hasNextPage: products.hasNextPage,
+            prevLink: products.hasPrevPage ? `/api/products?page=${products.prevPage}&limit=${limit}&category=${category}&sort=${sort}` : null,
+            nextLink: products.hasNextPage ? `/api/products?page=${products.nextPage}&limit=${limit}&category=${category}&sort=${sort}` : null
+        };
+
+        res.json(response);
     } catch (error) {
         console.error("Error en getProducts:", error);
-        res.status(500).json({ error: 'Error al obtener productos' });
+        res.status(500).json({ status: 'error', error: 'Error al obtener productos' });
     }
 };
 
